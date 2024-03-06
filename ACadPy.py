@@ -10,7 +10,7 @@ acad = Autocad()
 
 
 # C:\\Users\\HP\\OneDrive\\Desktop\\BASE_
-# C:\\Users\\User\\Desktop\\BASE
+# C:\\Users\\User\\Desktop\\BASE_
 def generate_a_file(data_obj, file_name, dist, r_var):
     name = file_name + '.dwg'
     name_temp = file_name + '.bak'
@@ -26,6 +26,9 @@ def generate_a_file(data_obj, file_name, dist, r_var):
         # then create it.
         os.makedirs(f'{folder_path}{name_folder}')
     path = f'{folder_path}{name_folder}\\{name}'
+    if os.path.exists(path):
+        print('Файл уже существует !')
+        return 0
     if r_var:
         os.popen(f'copy auto_city.dwg {path}')
     else:
@@ -111,14 +114,6 @@ def generate_a_file(data_obj, file_name, dist, r_var):
                 set_text(name, text_point_village.get(v), ''.join(data_obj.get(v)), data_table_width_village.get(v),
                      0, 400.0)
 
-        # Эксперимент с таблицей
-        # table = acad.model.AddTable(APoint(12312.5, 20900.4), 1, 1, 7, 20)
-        # table.SetTextStyle('Standard2')
-        # table.TableStyle('Standard')
-        # table.SetTextHeight(0, 500)
-        # table.SetText(0, 0, '\T0.90;Text')
-        # acad.ActiveDocument.SendCommand("_WF")
-        # print(v, data_obj.get(v))
     else:
         print('Ошибка ! in Generate_File')
         try:
@@ -130,18 +125,6 @@ def generate_a_file(data_obj, file_name, dist, r_var):
 
 
 def set_text(fn, p, text, width, r_var, size=4.2):
-    # txt = text.split(';')[-1].strip()
-
-    # проверяем, если передается не full_adr (полный адрес содержащий > 3-х эл-тов)
-    # например, г. Москва, ул. Лескова, д. 10А, кв. 21 - это полный адрес
-    # def correct_px():
-    #     """Функция поправляет координату X вставляемого текста
-    #        это нужно для правильного отображения текста в шапке БТИ
-    #     """
-    #     if len(txt.split(',')) < 3:
-    #         return (len(txt) + 4) / 2
-    #     return 0
-
     try:
         table = acad.model.AddTable(p, 1, 1, size, width)
         if r_var:
